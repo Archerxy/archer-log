@@ -59,6 +59,7 @@ public class Logger {
 		cf = new ClassFormatter(properties.getClassPattern());
 		if(properties.isAppendFile()) {
 			writer = new LogFileWriter(
+					properties.isAppendFile(),
 					properties.getKeepDays(),
 					properties.getLogPath(),
 					properties.getFileName());

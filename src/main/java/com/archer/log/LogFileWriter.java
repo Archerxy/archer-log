@@ -18,11 +18,14 @@ class LogFileWriter {
 	private static final String FILE_NAME = "log";
 	private static final int KEEP_DAYS = 7;
 
+
+	private boolean appendFile;
 	private int keepDays;
 	private Path logPath;
 	private String fileName;
 
-    public LogFileWriter(int keepDays, String logPath, String fileName) {
+    public LogFileWriter(boolean appendFile, int keepDays, String logPath, String fileName) {
+    	this.appendFile = appendFile;
     	if(keepDays <= 0 || keepDays > MAX_KEEP_DAYS) {
     		this.keepDays = KEEP_DAYS;
     	} else {
@@ -49,12 +52,14 @@ class LogFileWriter {
     	if(!dst.isAbsolute()) {
     		dst = Paths.get(LogUtil.getCurrentWorkDir(), path);
     	}
-    	if(!Files.exists(dst)) {
-    		try {
-				Files.createDirectories(dst);
-			} catch (IOException e) {
-				throw new RuntimeException("can not mkdir " + dst.toString());
-			}
+    	if(appendFile) {
+        	if(!Files.exists(dst)) {
+        		try {
+    				Files.createDirectories(dst);
+    			} catch (IOException e) {
+    				throw new RuntimeException("can not mkdir " + dst.toString());
+    			}
+        	}
     	}
 		return dst;
     }
