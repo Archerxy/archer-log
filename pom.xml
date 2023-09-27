@@ -4,7 +4,7 @@
 
   <groupId>com.archer</groupId>
   <artifactId>archer-log</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <packaging>jar</packaging>
 
   <name>archer-log</name>
@@ -17,7 +17,7 @@
   </properties>
   
   <build>
-    <finalName>archer-log-1.1.0</finalName>
+    <finalName>archer-log-1.1.1</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -32,12 +32,15 @@ final class LogRecoder extends Thread {
 	@Override
 	public void run() {
 		File log = writer.getLogFile();
-		if(!log.exists()) {
-			writer.createNewAndRemoveOld(log);
+		if(log == null) {
+			return ;
 		}
 		try {
 			Files.write(log.toPath(), buf.read(), StandardOpenOption.APPEND);
-		} catch (IOException ignore) {}
+		} catch (IOException e) {
+			System.err.println("can not write logs to file '" +
+					log.toString() + "', due to " + e.getLocalizedMessage());
+		}
 	}
 	
 	static class Buffer {
