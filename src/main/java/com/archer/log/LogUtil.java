@@ -43,6 +43,18 @@ class LogUtil {
 		if(data == null) {
 			return null;
 		}
+		if(data.getClass().isPrimitive()) {
+			return String.valueOf(data);
+		}
+		if(data instanceof Boolean) {
+			return (Boolean) data?"true":"false";
+		}
+		if(data instanceof Byte) {
+			return ((Byte) data).toString();
+		}
+		if(data instanceof Character) {
+			return ((Character) data).toString();
+		}
 		if(data instanceof Boolean) {
 			return (Boolean) data?"true":"false";
 		}
