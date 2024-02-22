@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 class LogFileWriter {
 
-	private static final int MAX_KEEP_DAYS = 365;
+	private static final int MAX_KEEP_DAYS = 365 * 10;
 	private static final String FILE_TAIL = ".log";
 	
 	private static final String LOG_PATH = "logs";
@@ -26,7 +26,7 @@ class LogFileWriter {
 
     public LogFileWriter(boolean appendFile, int keepDays, String logPath, String fileName) {
     	this.appendFile = appendFile;
-    	if(keepDays <= 0 || keepDays > MAX_KEEP_DAYS) {
+    	if(keepDays > MAX_KEEP_DAYS) {
     		this.keepDays = KEEP_DAYS;
     	} else {
     		this.keepDays = keepDays;
@@ -86,6 +86,9 @@ class LogFileWriter {
     }
 
     protected void removeOldLogs() {
+    	if(keepDays <= 0) {
+    		return ;
+    	}
     	File[] allLogFiles = logPath.toFile().listFiles();
     	LocalDate now = LocalDate.now();
     	for(File log: allLogFiles) {
