@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -90,16 +91,14 @@ class LogFileWriter {
     		return ;
     	}
     	File[] allLogFiles = logPath.toFile().listFiles();
-    	LocalDate now = LocalDate.now();
+    	long ft = System.currentTimeMillis() - keepDays * 24 * 3600 * 1000; 
     	for(File log: allLogFiles) {
-    		String name = log.getName();
-    		String timeStr = name.substring(fileName.length() + 1, name.length() - FILE_TAIL.length());
-    		LocalDate theTime = LocalDate.parse(timeStr, DateTimeFormatter.ISO_LOCAL_DATE);
-    		if(theTime.plusDays(keepDays).isBefore(now)) {
-    			try {
+    		try {
+				BasicFileAttributes attr = Files.readAttributes(log.toPath(), BasicFileAttributes.class);
+				if(attr.creationTime().toMillis() < ft) {
 					Files.delete(log.toPath());
-				} catch (IOException ignore) {}
-    		}
+				}
+			} catch (IOException ignore) {}
     	}
     }
 }
