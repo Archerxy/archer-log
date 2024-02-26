@@ -11,7 +11,7 @@ import java.util.Arrays;
  */
 final class LogRecoder extends Thread {
 	
-	private static LogRecoder recoder;
+	private static volatile LogRecoder recoder;
 	
 	private static Buffer buf = new Buffer();
 	
@@ -31,16 +31,25 @@ final class LogRecoder extends Thread {
 	
 	@Override
 	public void run() {
-		File log = writer.getLogFile();
-		if(log == null) {
-			return ;
+		int tryCount = 3;
+		while(tryCount > 0) {
+			if(buf.available() <= 0) {
+				tryCount--;
+				continue;
+			}
+			tryCount = 3;
+			File log = writer.getLogFile();
+			if(log == null) {
+				return ;
+			}
+			try {
+				Files.write(log.toPath(), buf.read(), StandardOpenOption.APPEND);
+			} catch (IOException e) {
+				System.err.println("can not write logs to file '" +
+						log.toString() + "', due to " + e.getLocalizedMessage());
+			}	
 		}
-		try {
-			Files.write(log.toPath(), buf.read(), StandardOpenOption.APPEND);
-		} catch (IOException e) {
-			System.err.println("can not write logs to file '" +
-					log.toString() + "', due to " + e.getLocalizedMessage());
-		}
+		recoder = null;
 	}
 	
 	static class Buffer {
@@ -85,6 +94,10 @@ final class LogRecoder extends Thread {
 				System.arraycopy(in, 0, buf, write, len);
 				write += len;
 			}
+		}
+		
+		public int available() {
+			return write - read;
 		}
 	}
 }
