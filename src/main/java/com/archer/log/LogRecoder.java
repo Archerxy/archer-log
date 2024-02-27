@@ -46,7 +46,7 @@ final class LogRecoder extends Thread {
 				Files.write(log.toPath(), buf.read(), StandardOpenOption.APPEND);
 			} catch (IOException e) {
 				System.err.println("can not write logs to file '" +
-						log.toString() + "', due to " + e.getLocalizedMessage());
+						log.toString() + "', due to " + e.getClass().getSimpleName() + ": " + e.getLocalizedMessage());
 			}	
 		}
 		recoder = null;

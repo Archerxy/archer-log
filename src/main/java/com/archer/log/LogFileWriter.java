@@ -78,7 +78,7 @@ class LogFileWriter {
     			Files.createFile(logFile.toPath());
     		} catch (IOException ex) {
     			System.err.println("can not create file '" + logFile.toString() +
-    					"', due to " + ex.getLocalizedMessage());
+    					"', due to " + ex.getClass().getSimpleName() + ": " + ex.getLocalizedMessage());
     			return null;
     		}
     		removeOldLogs();
@@ -91,7 +91,7 @@ class LogFileWriter {
     		return ;
     	}
     	File[] allLogFiles = logPath.toFile().listFiles();
-    	long ft = System.currentTimeMillis() - keepDays * 24 * 3600 * 1000; 
+    	long ft = System.currentTimeMillis() - ((long)keepDays * 24L * 3600L * 1000L);
     	for(File log: allLogFiles) {
     		try {
 				BasicFileAttributes attr = Files.readAttributes(log.toPath(), BasicFileAttributes.class);
